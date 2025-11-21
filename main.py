@@ -1,8 +1,10 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_marshmallow import Marshmallow
 
-# Create database instance at module level so models can import it
+# Initialise SQLAlchemy and Marshmallow objects:
 db = SQLAlchemy()
+ma = Marshmallow()
 
 def create_app():
     
@@ -12,7 +14,10 @@ def create_app():
     # configuring our app:
     app.config.from_object("config.app_config")
 
-    # Initialise the database with the app
+    # Initialise the database with the app:
     db.init_app(app)
+
+    # Initialise Marshmallow with the app:
+    ma.init_app(app)
     
     return app
