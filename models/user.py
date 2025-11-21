@@ -6,4 +6,4 @@ class User(db.Model):
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(255), unique=True, nullable=False)
 
-    trip = db.relationship("Trip", back_populates="user")
+    trips = db.relationship("Trip", back_populates="user", cascade="all, delete-orphan")

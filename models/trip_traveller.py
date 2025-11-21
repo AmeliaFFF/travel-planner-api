@@ -6,5 +6,5 @@ class TripTraveller(db.Model):
     traveller_id = db.Column(db.Integer, db.ForeignKey("traveller.traveller_id"), primary_key=True)
     role = db.Column(db.String(50))
 
-    trip = db.relationship("Trip", back_populates="trip_traveller")
-    traveller = db.relationship("Traveller", back_populates="trip_traveller")
+    trip = db.relationship("Trip", back_populates="trip_travellers")
+    traveller = db.relationship("Traveller", back_populates="trip_travellers")

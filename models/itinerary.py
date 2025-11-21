@@ -14,4 +14,4 @@ class ItineraryItem(db.Model):
     cost_total = db.Column(db.Numeric(precision=10, scale=2))
     currency_code = db.Column(db.String(3))
 
-    trip = db.relationship("Trip", back_populates="itinerary_item")
+    trip = db.relationship("Trip", back_populates="itinerary_items")

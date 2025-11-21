@@ -12,12 +12,9 @@ class Trip(db.Model):
     currency_code = db.Column(db.String(3), nullable=False)
     notes = db.Column(db.String(500))
 
-    # Relationship back to User
-    user = db.relationship("User", back_populates="trip")
-    
-    # Relationships to other models
-    accommodation_booking = db.relationship("AccommodationBooking", back_populates="trip", cascade="all, delete-orphan")
-    transport_booking = db.relationship("TransportBooking", back_populates="trip", cascade="all, delete-orphan")
-    itinerary_item = db.relationship("ItineraryItem", back_populates="trip", cascade="all, delete-orphan")
-    expense = db.relationship("Expense", back_populates="trip", cascade="all, delete-orphan")
-    trip_traveller = db.relationship("TripTraveller", back_populates="trip", cascade="all, delete-orphan")
+    user = db.relationship("User", back_populates="trips")
+    accommodation_bookings = db.relationship("AccommodationBooking", back_populates="trip", cascade="all, delete-orphan")
+    transport_bookings = db.relationship("TransportBooking", back_populates="trip", cascade="all, delete-orphan")
+    itinerary_items = db.relationship("ItineraryItem", back_populates="trip", cascade="all, delete-orphan")
+    expenses = db.relationship("Expense", back_populates="trip", cascade="all, delete-orphan")
+    trip_travellers = db.relationship("TripTraveller", back_populates="trip", cascade="all, delete-orphan")

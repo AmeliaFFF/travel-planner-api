@@ -7,4 +7,4 @@ class Traveller(db.Model):
     email = db.Column(db.String(255), unique=True)
     notes = db.Column(db.String(500))
 
-    trip_traveller = db.relationship("TripTraveller", back_populates="traveller", cascade="all, delete-orphan")
+    trip_travellers = db.relationship("TripTraveller", back_populates="traveller", cascade="all, delete-orphan")

@@ -10,4 +10,4 @@ class Expense(db.Model):
     cost_total = db.Column(db.Numeric(precision=10, scale=2), nullable=False)
     currency_code = db.Column(db.String(3), nullable=False)
 
-    trip = db.relationship("Trip", back_populates="expense")
+    trip = db.relationship("Trip", back_populates="expenses")
