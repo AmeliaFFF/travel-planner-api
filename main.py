@@ -19,5 +19,8 @@ def create_app():
 
     # Initialise Marshmallow with the app:
     ma.init_app(app)
+
+    from commands import db_commands
+    app.register_blueprint(db_commands)
     
     return app
