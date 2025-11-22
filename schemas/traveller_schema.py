@@ -1,7 +1,10 @@
 from main import ma
+from models.traveller import Traveller
 
-class TravellerSchema(ma.Schema):
+class TravellerSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
+        model = Traveller
+        load_instance = True
         ordered = True
         fields = ("traveller_id", "name", "email", "notes")
 

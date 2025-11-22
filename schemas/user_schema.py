@@ -1,7 +1,10 @@
 from main import ma
+from models.user import User
 
-class UserSchema(ma.Schema):
+class UserSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
+        model = User
+        load_instance = True
         ordered = True
         fields = ("user_id", "name", "email")
 
