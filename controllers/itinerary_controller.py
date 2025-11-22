@@ -1,0 +1,14 @@
+from flask import Blueprint, jsonify, request, abort
+from main import db
+from models.itinerary import ItineraryItem
+from schemas.itinerary_schema import itinerary_item_schema, itinerary_items_schema
+
+itinerary_items = Blueprint("itinerary_items", __name__, url_prefix="/itinerary-items")
+
+# GET all itinerary items
+@itinerary_items.route("/", methods=["GET"])
+def get_itinerary_items():
+    stmt = db.select(ItineraryItem)
+    itinerary_items_list = db.session.scalars(stmt)
+    result = itinerary_items_schema.dump(itinerary_items_list)
+    return jsonify(result), 200
