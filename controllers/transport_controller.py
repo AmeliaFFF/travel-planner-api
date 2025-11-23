@@ -41,3 +41,13 @@ def update_transport_booking(transport_booking_id):
     transport_booking = transport_booking_schema.load(body_data, instance=transport_booking, session=db.session, partial=True)
     db.session.commit()
     return transport_booking_schema.dump(transport_booking), 200
+
+# DELETE an existing transport booking by ID
+@transport_bookings.route("/<int:transport_booking_id>", methods=["DELETE"])
+def delete_transport_booking(transport_booking_id):
+    transport_booking = TransportBooking.query.get(transport_booking_id)
+    if not transport_booking:
+        return jsonify({"error": f"Transport booking with ID #{transport_booking_id} does not exist."}), 404
+    db.session.delete(transport_booking)
+    db.session.commit()
+    return jsonify({"message": f"Transport booking with ID #{transport_booking_id} deleted successfully."}), 200

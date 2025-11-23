@@ -41,3 +41,13 @@ def update_itinerary_item(itinerary_item_id):
     itinerary_item = itinerary_item_schema.load(body_data, instance=itinerary_item, session=db.session, partial=True)
     db.session.commit()
     return itinerary_item_schema.dump(itinerary_item), 200
+
+# DELETE an existing itinerary item by ID
+@itinerary_items.route("/<int:itinerary_item_id>", methods=["DELETE"])
+def delete_itinerary_item(itinerary_item_id):
+    itinerary_item = ItineraryItem.query.get(itinerary_item_id)
+    if not itinerary_item:
+        return jsonify({"error": f"Itinerary item with ID #{itinerary_item_id} does not exist."}), 404
+    db.session.delete(itinerary_item)
+    db.session.commit()
+    return jsonify({"message": f"Itinerary item with ID #{itinerary_item_id} deleted successfully."}), 200

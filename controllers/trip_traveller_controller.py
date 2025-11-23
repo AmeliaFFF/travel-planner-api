@@ -85,6 +85,18 @@ def update_trip_traveller(trip_id, traveller_id):
     if not trip_traveller:
         return jsonify({"error": f"Trip traveller with Trip ID #{trip_id} and Traveller ID #{traveller_id} does not exist."}), 404
     body_data = request.get_json()
+    allowed_fields = {"role"}
+    sent_fields = set(body_data.keys())
+    disallowed = sent_fields - allowed_fields
+    if disallowed:
+        return jsonify({
+            "error": "These fields cannot be updated.",
+            "invalid_fields": list(disallowed),
+            "allowed_updatable_field": ["role"],
+            "example_format": {
+                "role": "friend"
+            }
+        }), 400
     if "role" not in body_data:
         return jsonify({
             "error": "Missing required field.",
@@ -96,3 +108,24 @@ def update_trip_traveller(trip_id, traveller_id):
     trip_traveller.role = body_data["role"]
     db.session.commit()
     return trip_traveller_schema.dump(trip_traveller), 200
+
+# DELETE an existing trip traveller by ID
+@trip_travellers.route("/<int:trip_id>/<int:traveller_id>", methods=["DELETE"])
+def delete_trip_traveller(trip_id, traveller_id):
+    trip_traveller = TripTraveller.query.get((trip_id, traveller_id))
+    if not trip_traveller:
+        return jsonify({"error": f"No link exists between Trip ID #{trip_id} and Traveller ID #{traveller_id}."}), 404
+    db.session.delete(trip_traveller)
+    db.session.commit()
+    return jsonify({
+        "message": f"Traveller #{traveller_id} removed from Trip #{trip_id}."
+    }), 200
+
+# DELETE fallback route when only one ID is provided
+@trip_travellers.route("/<int:id>", methods=["DELETE"])
+def invalid_trip_traveller_delete(id):
+    return jsonify({
+        "error": "This endpoint requires 2 IDs: /trip-travellers/<trip_id>/<traveller_id>",
+        "example": "/trip-travellers/1/2",
+        "received": id
+    }), 400

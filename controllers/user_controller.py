@@ -41,3 +41,13 @@ def update_user(user_id):
     user = user_schema.load(body_data, instance=user, session=db.session, partial=True)
     db.session.commit()
     return user_schema.dump(user), 200
+
+# DELETE an existing user by ID
+@users.route("/<int:user_id>", methods=["DELETE"])
+def delete_user(user_id):
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"error": f"User with ID #{user_id} does not exist."}), 404
+    db.session.delete(user)
+    db.session.commit()
+    return jsonify({"message": f"User with ID #{user_id} deleted successfully."}), 200

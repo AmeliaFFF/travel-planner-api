@@ -41,3 +41,13 @@ def update_trip(trip_id):
     trip = trip_schema.load(body_data, instance=trip, session=db.session, partial=True)
     db.session.commit()
     return trip_schema.dump(trip), 200
+
+# DELETE an existing trip by ID
+@trips.route("/<int:trip_id>", methods=["DELETE"])
+def delete_trip(trip_id):
+    trip = Trip.query.get(trip_id)
+    if not trip:
+        return jsonify({"error": f"Trip with ID #{trip_id} does not exist."}), 404
+    db.session.delete(trip)
+    db.session.commit()
+    return jsonify({"message": f"Trip with ID #{trip_id} deleted successfully."}), 200

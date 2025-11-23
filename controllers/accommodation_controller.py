@@ -41,3 +41,13 @@ def update_accommodation_booking(accommodation_booking_id):
     accommodation_booking = accommodation_booking_schema.load(body_data, instance=accommodation_booking, session=db.session, partial=True)
     db.session.commit()
     return accommodation_booking_schema.dump(accommodation_booking), 200
+
+# DELETE an existing accommodation booking by ID
+@accommodation_bookings.route("/<int:accommodation_booking_id>", methods=["DELETE"])
+def delete_accommodation_booking(accommodation_booking_id):
+    accommodation_booking = AccommodationBooking.query.get(accommodation_booking_id)
+    if not accommodation_booking:
+        return jsonify({"error": f"Accommodation booking with ID #{accommodation_booking_id} does not exist."}), 404
+    db.session.delete(accommodation_booking)
+    db.session.commit()
+    return jsonify({"message": f"Accommodation booking with ID #{accommodation_booking_id} deleted successfully."}), 200

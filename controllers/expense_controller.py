@@ -41,3 +41,13 @@ def update_expense(expense_id):
     expense = expense_schema.load(body_data, instance=expense, session=db.session, partial=True)
     db.session.commit()
     return expense_schema.dump(expense), 200
+
+# DELETE an existing expense by ID
+@expenses.route("/<int:expense_id>", methods=["DELETE"])
+def delete_expense(expense_id):
+    expense = Expense.query.get(expense_id)
+    if not expense:
+        return jsonify({"error": f"Expense with ID #{expense_id} does not exist."}), 404
+    db.session.delete(expense)
+    db.session.commit()
+    return jsonify({"message": f"Expense with ID #{expense_id} deleted successfully."}), 200

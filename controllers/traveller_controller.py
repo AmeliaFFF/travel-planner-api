@@ -41,3 +41,13 @@ def update_traveller(traveller_id):
     traveller = traveller_schema.load(body_data, instance=traveller, session=db.session, partial=True)
     db.session.commit()
     return traveller_schema.dump(traveller), 200
+
+# DELETE an existing traveller by ID
+@travellers.route("/<int:traveller_id>", methods=["DELETE"])
+def delete_traveller(traveller_id):
+    traveller = Traveller.query.get(traveller_id)
+    if not traveller:
+        return jsonify({"error": f"Traveller with ID #{traveller_id} does not exist."}), 404
+    db.session.delete(traveller)
+    db.session.commit()
+    return jsonify({"message": f"Traveller with ID #{traveller_id} deleted successfully."}), 200
