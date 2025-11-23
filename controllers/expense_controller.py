@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request, abort
 from main import db
 from models.expense import Expense
+from models.trip import Trip
 from schemas.expense_schema import expense_schema, expenses_schema
 
 expenses = Blueprint("expenses", __name__, url_prefix="/expenses")
@@ -20,6 +21,25 @@ def get_expense(expense_id):
     if not expense:
         return jsonify({"error": f"Expense with ID #{expense_id} does not exist."}), 404
     result = expense_schema.dump(expense)
+    return jsonify(result), 200
+
+# GET all expenses for a specific trip by trip ID
+@expenses.route("/trip/<int:trip_id>", methods=["GET"])
+def get_expenses_for_trip(trip_id):
+    # Check that the trip actually exists
+    trip = Trip.query.get(trip_id)
+    if not trip:
+        return jsonify({"error": f"Trip with ID #{trip_id} does not exist."}), 404
+    # Fetch all expenses for this trip
+    stmt = db.select(Expense).filter_by(trip_id=trip_id)
+    expenses_list = db.session.scalars(stmt)
+    result = expenses_schema.dump(expenses_list)
+    # If the trip exists but has no expenses
+    if len(result) == 0:
+        return jsonify({
+            "message": f"Trip with ID #{trip_id} has no expenses."
+        }), 200
+    # Return the trip's expenses
     return jsonify(result), 200
 
 # POST a new expense

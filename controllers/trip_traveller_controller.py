@@ -38,11 +38,9 @@ def get_trip_traveller(trip_id, traveller_id):
 @trip_travellers.route("/", methods=["POST"])
 def create_trip_traveller():
     body_data = request.get_json()
-
     # Check all required fields are present
     required_fields = ["trip_id", "traveller_id"]
     missing = [field for field in required_fields if field not in body_data]
-
     if missing:
         return jsonify({
             "error": "Missing required field(s).",
@@ -52,27 +50,19 @@ def create_trip_traveller():
                 "traveller_id": 2,
             }
         }), 400
-
-    # Load the new trip traveller data
     new_trip_traveller = trip_traveller_schema.load(body_data, session=db.session)
-
     # Check that the trip exists
     trip = Trip.query.get(new_trip_traveller.trip_id)
     if not trip:
         return jsonify({"error": f"Trip with ID #{new_trip_traveller.trip_id} does not exist."}), 404
-
     # Check that the traveller exists
     traveller = Traveller.query.get(new_trip_traveller.traveller_id)
     if not traveller:
         return jsonify({"error": f"Traveller with ID #{new_trip_traveller.traveller_id} does not exist."}), 404
-
     # Check if this trip/traveller combo already exists
-    existing = TripTraveller.query.get(
-        (new_trip_traveller.trip_id, new_trip_traveller.traveller_id)
-    )
+    existing = TripTraveller.query.get((new_trip_traveller.trip_id, new_trip_traveller.traveller_id))
     if existing:
         return jsonify({"error": "This traveller is already linked to this trip."}), 400
-
     # Save and submit
     db.session.add(new_trip_traveller)
     db.session.commit()

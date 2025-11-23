@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request, abort
 from main import db
 from models.transport import TransportBooking
+from models.trip import Trip
 from schemas.transport_schema import transport_booking_schema, transport_bookings_schema
 
 transport_bookings = Blueprint("transport_bookings", __name__, url_prefix="/transport-bookings")
@@ -20,6 +21,25 @@ def get_transport_booking(transport_booking_id):
     if not transport_booking:
         return jsonify({"error": f"Transport booking with ID #{transport_booking_id} does not exist."}), 404
     result = transport_booking_schema.dump(transport_booking)
+    return jsonify(result), 200
+
+# GET all transport bookings for a specific trip by trip ID
+@transport_bookings.route("/trip/<int:trip_id>", methods=["GET"])
+def get_transport_bookings_for_trip(trip_id):
+    # Check that the trip actually exists
+    trip = Trip.query.get(trip_id)
+    if not trip:
+        return jsonify({"error": f"Trip with ID #{trip_id} does not exist."}), 404
+    # Fetch all transport bookings for this trip
+    stmt = db.select(TransportBooking).filter_by(trip_id=trip_id)
+    transport_bookings_list = db.session.scalars(stmt)
+    result = transport_bookings_schema.dump(transport_bookings_list)
+    # If the trip exists but has no transport bookings
+    if len(result) == 0:
+        return jsonify({
+            "message": f"Trip with ID #{trip_id} has no transport bookings."
+        }), 200
+    # Return the trip's transport bookings
     return jsonify(result), 200
 
 # POST a new transport booking

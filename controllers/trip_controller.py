@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request, abort
 from main import db
 from models.trip import Trip
+from models.user import User
 from schemas.trip_schema import trip_schema, trips_schema
 
 trips = Blueprint("trips", __name__, url_prefix="/trips")
@@ -20,6 +21,25 @@ def get_trip(trip_id):
     if not trip:
         return jsonify({"error": f"Trip with ID #{trip_id} does not exist."}), 404
     result = trip_schema.dump(trip)
+    return jsonify(result), 200
+
+# GET all trips for a specific user by user ID
+@trips.route("/user/<int:user_id>", methods=["GET"])
+def get_trips_for_user(user_id):
+    # Check that the user actually exists
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"error": f"User with ID #{user_id} does not exist."}), 404
+    # Fetch all trips for this user
+    stmt = db.select(Trip).filter_by(user_id=user_id)
+    trips_list = db.session.scalars(stmt)
+    result = trips_schema.dump(trips_list)
+    # If the user exists but has no trips
+    if len(result) == 0:
+        return jsonify({
+            "message": f"User with ID #{user_id} has no trips."
+        }), 200
+    # Return the user's trips
     return jsonify(result), 200
 
 # POST a new trip

@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request, abort
 from main import db
 from models.itinerary import ItineraryItem
+from models.trip import Trip
 from schemas.itinerary_schema import itinerary_item_schema, itinerary_items_schema
 
 itinerary_items = Blueprint("itinerary_items", __name__, url_prefix="/itinerary-items")
@@ -20,6 +21,25 @@ def get_itinerary_item(itinerary_item_id):
     if not itinerary_item:
         return jsonify({"error": f"Itinerary item with ID #{itinerary_item_id} does not exist."}), 404
     result = itinerary_item_schema.dump(itinerary_item)
+    return jsonify(result), 200
+
+# GET all itinerary items for a specific trip by trip ID
+@itinerary_items.route("/trip/<int:trip_id>", methods=["GET"])
+def get_itinerary_items_for_trip(trip_id):
+    # Check that the trip actually exists
+    trip = Trip.query.get(trip_id)
+    if not trip:
+        return jsonify({"error": f"Trip with ID #{trip_id} does not exist."}), 404
+    # Fetch all itinerary items for this trip
+    stmt = db.select(ItineraryItem).filter_by(trip_id=trip_id)
+    itinerary_items_list = db.session.scalars(stmt)
+    result = itinerary_items_schema.dump(itinerary_items_list)
+    # If the trip exists but has no itinerary items
+    if len(result) == 0:
+        return jsonify({
+            "message": f"Trip with ID #{trip_id} has no itinerary items."
+        }), 200
+    # Return the trip's itinerary items
     return jsonify(result), 200
 
 # POST a new itinerary item
