@@ -21,3 +21,12 @@ def get_transport_booking(transport_booking_id):
         return jsonify({"error": f"Transport booking with ID #{transport_booking_id} does not exist."}), 404
     result = transport_booking_schema.dump(transport_booking)
     return jsonify(result), 200
+
+# POST a new transport booking
+@transport_bookings.route("/", methods=["POST"])
+def create_transport_booking():
+    body_data = request.get_json()
+    new_transport_booking = transport_booking_schema.load(body_data, session=db.session)
+    db.session.add(new_transport_booking)
+    db.session.commit()
+    return transport_booking_schema.dump(new_transport_booking), 201

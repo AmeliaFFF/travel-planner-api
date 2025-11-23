@@ -21,3 +21,12 @@ def get_expense(expense_id):
         return jsonify({"error": f"Expense with ID #{expense_id} does not exist."}), 404
     result = expense_schema.dump(expense)
     return jsonify(result), 200
+
+# POST a new expense
+@expenses.route("/", methods=["POST"])
+def create_expense():
+    body_data = request.get_json()
+    new_expense = expense_schema.load(body_data, session=db.session)
+    db.session.add(new_expense)
+    db.session.commit()
+    return expense_schema.dump(new_expense), 201

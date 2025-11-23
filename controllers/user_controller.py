@@ -21,3 +21,12 @@ def get_user(user_id):
         return jsonify({"error": f"User with ID #{user_id} does not exist."}), 404
     result = user_schema.dump(user)
     return jsonify(result), 200
+
+# POST a new user
+@users.route("/", methods=["POST"])
+def create_user():
+    body_data = request.get_json()
+    new_user = user_schema.load(body_data, session=db.session)
+    db.session.add(new_user)
+    db.session.commit()
+    return user_schema.dump(new_user), 201

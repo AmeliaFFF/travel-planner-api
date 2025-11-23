@@ -21,3 +21,12 @@ def get_accommodation_booking(accommodation_booking_id):
         return jsonify({"error": f"Accommodation booking with ID #{accommodation_booking_id} does not exist."}), 404
     result = accommodation_booking_schema.dump(accommodation_booking)
     return jsonify(result), 200
+
+# POST a new accommodation booking
+@accommodation_bookings.route("/", methods=["POST"])
+def create_accommodation_booking():
+    body_data = request.get_json()
+    new_accommodation_booking = accommodation_booking_schema.load(body_data, session=db.session)
+    db.session.add(new_accommodation_booking)
+    db.session.commit()
+    return accommodation_booking_schema.dump(new_accommodation_booking), 201

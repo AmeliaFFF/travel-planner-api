@@ -21,3 +21,12 @@ def get_trip(trip_id):
         return jsonify({"error": f"Trip with ID #{trip_id} does not exist."}), 404
     result = trip_schema.dump(trip)
     return jsonify(result), 200
+
+# POST a new trip
+@trips.route("/", methods=["POST"])
+def create_trip():
+    body_data = request.get_json()
+    new_trip = trip_schema.load(body_data, session=db.session)
+    db.session.add(new_trip)
+    db.session.commit()
+    return trip_schema.dump(new_trip), 201

@@ -21,3 +21,12 @@ def get_itinerary_item(itinerary_item_id):
         return jsonify({"error": f"Itinerary item with ID #{itinerary_item_id} does not exist."}), 404
     result = itinerary_item_schema.dump(itinerary_item)
     return jsonify(result), 200
+
+# POST a new itinerary item
+@itinerary_items.route("/", methods=["POST"])
+def create_itinerary_item():
+    body_data = request.get_json()
+    new_itinerary_item = itinerary_item_schema.load(body_data, session=db.session)
+    db.session.add(new_itinerary_item)
+    db.session.commit()
+    return itinerary_item_schema.dump(new_itinerary_item), 201

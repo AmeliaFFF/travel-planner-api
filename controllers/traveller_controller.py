@@ -21,3 +21,12 @@ def get_traveller(traveller_id):
         return jsonify({"error": f"Traveller with ID #{traveller_id} does not exist."}), 404
     result = traveller_schema.dump(traveller)
     return jsonify(result), 200
+
+# POST a new traveller
+@travellers.route("/", methods=["POST"])
+def create_traveller():
+    body_data = request.get_json()
+    new_traveller = traveller_schema.load(body_data, session=db.session)
+    db.session.add(new_traveller)
+    db.session.commit()
+    return traveller_schema.dump(new_traveller), 201
