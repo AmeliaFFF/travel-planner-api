@@ -9,7 +9,7 @@ expenses = Blueprint("expenses", __name__, url_prefix="/expenses")
 # GET all expenses
 @expenses.route("/", methods=["GET"])
 def get_expenses():
-    stmt = db.select(Expense)
+    stmt = (db.select(Expense).order_by(Expense.date))
     expenses_list = db.session.scalars(stmt)
     result = expenses_schema.dump(expenses_list)
     return jsonify(result), 200
@@ -31,7 +31,7 @@ def get_expenses_for_trip(trip_id):
     if not trip:
         return jsonify({"error": f"Trip with ID #{trip_id} does not exist."}), 404
     # Fetch all expenses for this trip
-    stmt = db.select(Expense).filter_by(trip_id=trip_id)
+    stmt = (db.select(Expense).filter_by(trip_id=trip_id).order_by(Expense.date))
     expenses_list = db.session.scalars(stmt)
     result = expenses_schema.dump(expenses_list)
     # If the trip exists but has no expenses

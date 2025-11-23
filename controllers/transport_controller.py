@@ -9,7 +9,7 @@ transport_bookings = Blueprint("transport_bookings", __name__, url_prefix="/tran
 # GET all transport bookings
 @transport_bookings.route("/", methods=["GET"])
 def get_transport_bookings():
-    stmt = db.select(TransportBooking)
+    stmt = db.select(TransportBooking).order_by(TransportBooking.departure_datetime)
     transport_bookings_list = db.session.scalars(stmt)
     result = transport_bookings_schema.dump(transport_bookings_list)
     return jsonify(result), 200
@@ -31,7 +31,7 @@ def get_transport_bookings_for_trip(trip_id):
     if not trip:
         return jsonify({"error": f"Trip with ID #{trip_id} does not exist."}), 404
     # Fetch all transport bookings for this trip
-    stmt = db.select(TransportBooking).filter_by(trip_id=trip_id)
+    stmt = (db.select(TransportBooking).filter_by(trip_id=trip_id).order_by(TransportBooking.departure_datetime))
     transport_bookings_list = db.session.scalars(stmt)
     result = transport_bookings_schema.dump(transport_bookings_list)
     # If the trip exists but has no transport bookings

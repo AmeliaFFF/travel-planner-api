@@ -9,7 +9,7 @@ accommodation_bookings = Blueprint("accommodation_bookings", __name__, url_prefi
 # GET all accommodation bookings
 @accommodation_bookings.route("/", methods=["GET"])
 def get_accommodation_bookings():
-    stmt = db.select(AccommodationBooking)
+    stmt = db.select(AccommodationBooking).order_by(AccommodationBooking.check_in_date)
     accommodation_bookings_list = db.session.scalars(stmt)
     result = accommodation_bookings_schema.dump(accommodation_bookings_list)
     return jsonify(result), 200
@@ -31,7 +31,7 @@ def get_accommodation_bookings_for_trip(trip_id):
     if not trip:
         return jsonify({"error": f"Trip with ID #{trip_id} does not exist."}), 404
     # Fetch all accommodation bookings for this trip
-    stmt = db.select(AccommodationBooking).filter_by(trip_id=trip_id)
+    stmt = (db.select(AccommodationBooking).filter_by(trip_id=trip_id).order_by(AccommodationBooking.check_in_date))
     accommodation_bookings_list = db.session.scalars(stmt)
     result = accommodation_bookings_schema.dump(accommodation_bookings_list)
     # If the trip exists but has no accommodation bookings

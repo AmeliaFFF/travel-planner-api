@@ -9,7 +9,7 @@ itinerary_items = Blueprint("itinerary_items", __name__, url_prefix="/itinerary-
 # GET all itinerary items
 @itinerary_items.route("/", methods=["GET"])
 def get_itinerary_items():
-    stmt = db.select(ItineraryItem)
+    stmt = (db.select(ItineraryItem).order_by(ItineraryItem.date, ItineraryItem.start_time))
     itinerary_items_list = db.session.scalars(stmt)
     result = itinerary_items_schema.dump(itinerary_items_list)
     return jsonify(result), 200
@@ -31,7 +31,7 @@ def get_itinerary_items_for_trip(trip_id):
     if not trip:
         return jsonify({"error": f"Trip with ID #{trip_id} does not exist."}), 404
     # Fetch all itinerary items for this trip
-    stmt = db.select(ItineraryItem).filter_by(trip_id=trip_id)
+    stmt = (db.select(ItineraryItem).filter_by(trip_id=trip_id).order_by(ItineraryItem.date, ItineraryItem.start_time))
     itinerary_items_list = db.session.scalars(stmt)
     result = itinerary_items_schema.dump(itinerary_items_list)
     # If the trip exists but has no itinerary items

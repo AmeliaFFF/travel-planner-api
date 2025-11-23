@@ -13,8 +13,8 @@ class Trip(db.Model):
     notes = db.Column(db.String(500))
 
     user = db.relationship("User", back_populates="trips")
-    accommodation_bookings = db.relationship("AccommodationBooking", back_populates="trip", cascade="all, delete-orphan")
-    transport_bookings = db.relationship("TransportBooking", back_populates="trip", cascade="all, delete-orphan")
-    itinerary_items = db.relationship("ItineraryItem", back_populates="trip", cascade="all, delete-orphan")
-    expenses = db.relationship("Expense", back_populates="trip", cascade="all, delete-orphan")
+    accommodation_bookings = db.relationship("AccommodationBooking", back_populates="trip", order_by="AccommodationBooking.check_in_date", cascade="all, delete-orphan")
+    transport_bookings = db.relationship("TransportBooking", back_populates="trip", order_by="TransportBooking.departure_datetime", cascade="all, delete-orphan")
+    itinerary_items = db.relationship("ItineraryItem", back_populates="trip", order_by="ItineraryItem.date, ItineraryItem.start_time", cascade="all, delete-orphan")
+    expenses = db.relationship("Expense", back_populates="trip", order_by="Expense.date", cascade="all, delete-orphan")
     trip_travellers = db.relationship("TripTraveller", back_populates="trip", cascade="all, delete-orphan")
