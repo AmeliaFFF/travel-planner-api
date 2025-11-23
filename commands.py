@@ -24,12 +24,23 @@ def seed_db():
         name="Alice Smith",
         email="alice@example.com"
     )
+
     john = User(
         name="John Taylor",
         email="john@example.com"
     )
 
-    db.session.add_all([alice, john])
+    mia = User(
+        name="Mia Thompson",
+        email="mia@example.com"
+    )
+
+    oliver = User(
+        name="Oliver Chen",
+        email="oliver@example.com"
+    )
+
+    db.session.add_all([alice, john, mia, oliver])
     db.session.commit()
 
     # TRAVELLERS
@@ -54,10 +65,34 @@ def seed_db():
     lucy_traveller = Traveller(
         name="Lucy Romano",
         email="lucy.romano@example.com",
-        notes="John’s partner"
+        notes="John's partner"
     )
 
-    db.session.add_all([alice_traveller, emma_traveller, john_traveller, lucy_traveller])
+    mia_traveller = Traveller(
+        name="Mia Thompson",
+        email="mia@example.com",
+        notes="Loves food tours"
+    )
+
+    oliver_traveller = Traveller(
+        name="Oliver Chen",
+        email="oliver@example.com",
+        notes="Travel photographer"
+    )
+
+    sarah_traveller = Traveller(
+        name="Sarah Patel",
+        email="sarah.patel@example.com",
+        notes="Friend who joins occasionally"
+    )
+
+    dylan_traveller = Traveller(
+        name="Dylan Nguyen",
+        email="dylan.nguyen@example.com",
+        notes="Adventure traveller"
+    )
+
+    db.session.add_all([alice_traveller, emma_traveller, john_traveller, lucy_traveller, mia_traveller, oliver_traveller, sarah_traveller, dylan_traveller])
     db.session.commit()
 
     # TRIPS
@@ -98,7 +133,43 @@ def seed_db():
         notes="Anniversary holiday"
     )
 
-    db.session.add_all([japan_trip, nz_trip, italy_trip])
+    # Trip 4 – Thailand (Mia)
+    thailand_trip = Trip(
+        user_id=mia.user_id,
+        name="Thailand 2027",
+        primary_destination="Bangkok & Phuket",
+        start_date="2027-02-10",
+        end_date="2027-02-20",
+        budget_amount=3100.00,
+        currency_code="AUD",
+        notes="Food tour + island hopping"
+    )
+
+    # Trip 5 – Canada (Oliver)
+    canada_trip = Trip(
+        user_id=oliver.user_id,
+        name="Canada 2027",
+        primary_destination="Vancouver & Banff",
+        start_date="2027-06-01",
+        end_date="2027-06-15",
+        budget_amount=5400.00,
+        currency_code="CAD",
+        notes="Photography trip in nature"
+    )
+
+    # Trip 6 – Singapore Weekend (Mia)
+    sg_trip = Trip(
+        user_id=mia.user_id,
+        name="Singapore Weekend",
+        primary_destination="Singapore",
+        start_date="2027-03-15",
+        end_date="2027-03-19",
+        budget_amount=1600.00,
+        currency_code="SGD",
+        notes="Short weekend getaway"
+    )
+
+    db.session.add_all([japan_trip, nz_trip, italy_trip, thailand_trip, canada_trip, sg_trip])
     db.session.commit()
 
     # TRIP–TRAVELLER (JOIN TABLE)
@@ -114,11 +185,25 @@ def seed_db():
         TripTraveller(trip_id=italy_trip.trip_id, traveller_id=john_traveller.traveller_id, role="organiser"),
         TripTraveller(trip_id=italy_trip.trip_id, traveller_id=lucy_traveller.traveller_id, role="companion"),
         TripTraveller(trip_id=italy_trip.trip_id, traveller_id=emma_traveller.traveller_id, role="friend"),
+
+        # Thailand trip: Mia + Sarah + Dylan
+        TripTraveller(trip_id=thailand_trip.trip_id, traveller_id=mia_traveller.traveller_id, role="organiser"),
+        TripTraveller(trip_id=thailand_trip.trip_id, traveller_id=sarah_traveller.traveller_id, role="friend"),
+        TripTraveller(trip_id=thailand_trip.trip_id, traveller_id=dylan_traveller.traveller_id, role="companion"),
+
+        # Canada trip: Oliver + Mia
+        TripTraveller(trip_id=canada_trip.trip_id, traveller_id=oliver_traveller.traveller_id, role="organiser"),
+        TripTraveller(trip_id=canada_trip.trip_id, traveller_id=mia_traveller.traveller_id, role="friend"),
+
+        # Singapore trip: Mia + Sarah
+        TripTraveller(trip_id=sg_trip.trip_id, traveller_id=mia_traveller.traveller_id, role="organiser"),
+        TripTraveller(trip_id=sg_trip.trip_id, traveller_id=sarah_traveller.traveller_id, role="friend"),
     ])
     db.session.commit()
 
     # ACCOMMODATION BOOKINGS
     db.session.add_all([
+        # Japan trip accommodations
         AccommodationBooking(
             trip_id=japan_trip.trip_id,
             name="Hotel Century Southern Tower",
@@ -139,9 +224,7 @@ def seed_db():
             cost_total=64000,
             currency_code="JPY"
         ),
-    ])
-
-    db.session.add(
+        # NZ trip accommodation
         AccommodationBooking(
             trip_id=nz_trip.trip_id,
             name="Queenstown Lakeview Holiday Park",
@@ -151,10 +234,50 @@ def seed_db():
             booking_reference="NZ-QLD-55221",
             cost_total=480,
             currency_code="NZD"
-        )
-    )
-
-    db.session.add(
+        ),
+        # Thailand trip accommodations
+        AccommodationBooking(
+            trip_id=thailand_trip.trip_id,
+            name="Chatrium Hotel Riverside",
+            address="Bangkok Riverside",
+            check_in_date="2027-02-10",
+            check_out_date="2027-02-14",
+            booking_reference="TH-CHAT-12345",
+            cost_total=540.00,
+            currency_code="THB"
+        ),
+        AccommodationBooking(
+            trip_id=thailand_trip.trip_id,
+            name="The Shore at Katathani",
+            address="Phuket",
+            check_in_date="2027-02-14",
+            check_out_date="2027-02-20",
+            booking_reference="TH-PKT-67890",
+            cost_total=1120.00,
+            currency_code="THB"
+        ),
+        # Canada trip accommodations
+        AccommodationBooking(
+            trip_id=canada_trip.trip_id,
+            name="Pan Pacific Vancouver",
+            address="Vancouver",
+            check_in_date="2027-06-01",
+            check_out_date="2027-06-07",
+            booking_reference="CA-VAN-44321",
+            cost_total=1600.00,
+            currency_code="CAD"
+        ),
+        AccommodationBooking(
+            trip_id=canada_trip.trip_id,
+            name="Fairmont Banff Springs",
+            address="Banff National Park",
+            check_in_date="2027-06-07",
+            check_out_date="2027-06-15",
+            booking_reference="CA-BANFF-11223",
+            cost_total=2400.00,
+            currency_code="CAD"
+        ),
+        # Italy trip accommodation
         AccommodationBooking(
             trip_id=italy_trip.trip_id,
             name="Hotel Artemide",
@@ -165,12 +288,12 @@ def seed_db():
             cost_total=750,
             currency_code="EUR"
         )
-    )
-
+    ])
     db.session.commit()
 
     # TRANSPORT BOOKINGS
-    db.session.add(
+    db.session.add_all([
+        # Japan trip transport
         TransportBooking(
             trip_id=japan_trip.trip_id,
             transport_type="flight",
@@ -182,10 +305,8 @@ def seed_db():
             booking_reference="QF25-2026",
             cost_total=1450.00,
             currency_code="AUD"
-        )
-    )
-
-    db.session.add(
+        ),
+        # NZ trip transport
         TransportBooking(
             trip_id=nz_trip.trip_id,
             transport_type="car_rental",
@@ -197,10 +318,8 @@ def seed_db():
             booking_reference="NZ-CR-72819",
             cost_total=680.00,
             currency_code="NZD"
-        )
-    )
-
-    db.session.add(
+        ),
+        # Italy trip transport
         TransportBooking(
             trip_id=italy_trip.trip_id,
             transport_type="train",
@@ -212,13 +331,51 @@ def seed_db():
             booking_reference="TRN-IT-45671",
             cost_total=42.00,
             currency_code="EUR"
+        ),
+        # Thailand trip transport
+        TransportBooking(
+            trip_id=thailand_trip.trip_id,
+            transport_type="flight",
+            from_location="Sydney",
+            to_location="Bangkok",
+            departure_datetime="2027-02-10 08:00",
+            arrival_datetime="2027-02-10 14:30",
+            carrier_name="Thai Airways",
+            booking_reference="TG476",
+            cost_total=950.00,
+            currency_code="AUD"
+        ),
+        TransportBooking(
+            trip_id=thailand_trip.trip_id,
+            transport_type="ferry",
+            from_location="Phi Phi",
+            to_location="Phuket",
+            departure_datetime="2027-02-14 10:00",
+            arrival_datetime="2027-02-14 12:00",
+            carrier_name="Andaman Ferry",
+            booking_reference="AF-PP-2027",
+            cost_total=35.00,
+            currency_code="THB"
+        ),
+        # Canada trip transport
+        TransportBooking(
+            trip_id=canada_trip.trip_id,
+            transport_type="flight",
+            from_location="Sydney",
+            to_location="Vancouver",
+            departure_datetime="2027-06-01 10:00",
+            arrival_datetime="2027-06-01 08:00",
+            carrier_name="Air Canada",
+            booking_reference="AC34",
+            cost_total=1800.00,
+            currency_code="AUD"
         )
-    )
-
+    ])
     db.session.commit()
 
     # ITINERARY ITEMS
     db.session.add_all([
+        # Japan itinerary item
         ItineraryItem(
             trip_id=japan_trip.trip_id,
             date="2026-04-12",
@@ -229,6 +386,7 @@ def seed_db():
             cost_total=3800,
             currency_code="JPY"
         ),
+        # NZ itinerary item
         ItineraryItem(
             trip_id=nz_trip.trip_id,
             date="2026-11-03",
@@ -239,6 +397,7 @@ def seed_db():
             cost_total=169,
             currency_code="NZD"
         ),
+        # Italy itinerary item
         ItineraryItem(
             trip_id=italy_trip.trip_id,
             date="2026-09-06",
@@ -249,11 +408,44 @@ def seed_db():
             cost_total=45,
             currency_code="EUR"
         ),
+        # Thailand itinerary items
+        ItineraryItem(
+            trip_id=thailand_trip.trip_id,
+            date="2027-02-11",
+            title="Bangkok Food Tour",
+            category="food",
+            location="Old Bangkok",
+            notes="Street food tour at night",
+            cost_total=50,
+            currency_code="THB"
+        ),
+        ItineraryItem(
+            trip_id=thailand_trip.trip_id,
+            date="2027-02-15",
+            title="Phi Phi Island Day Trip",
+            category="tour",
+            location="Phuket",
+            notes="Snorkelling included",
+            cost_total=120,
+            currency_code="THB"
+        ),
+        # Canada itinerary item
+        ItineraryItem(
+            trip_id=canada_trip.trip_id,
+            date="2027-06-03",
+            title="Stanley Park Photography Ride",
+            category="activity",
+            location="Vancouver",
+            cost_total=25,
+            currency_code="CAD"
+        ),
     ])
+
     db.session.commit()
 
     # EXPENSES
     db.session.add_all([
+        # Japan expense
         Expense(
             trip_id=japan_trip.trip_id,
             date="2026-04-12",
@@ -262,6 +454,7 @@ def seed_db():
             cost_total=1200,
             currency_code="JPY"
         ),
+        # NZ expense
         Expense(
             trip_id=nz_trip.trip_id,
             date="2026-11-04",
@@ -270,6 +463,7 @@ def seed_db():
             cost_total=98.50,
             currency_code="NZD"
         ),
+        # Italy expense
         Expense(
             trip_id=italy_trip.trip_id,
             date="2026-09-07",
@@ -277,6 +471,24 @@ def seed_db():
             description="Leather wallet",
             cost_total=60.00,
             currency_code="EUR"
+        ),
+        # Thailand expense
+        Expense(
+            trip_id=thailand_trip.trip_id,
+            date="2027-02-11",
+            category="food",
+            description="Pad Thai + Dessert",
+            cost_total=180,
+            currency_code="THB"
+        ),
+        # Canada expense
+        Expense(
+            trip_id=canada_trip.trip_id,
+            date="2027-06-04",
+            category="transport",
+            description="Day parking in Vancouver",
+            cost_total=28,
+            currency_code="CAD"
         ),
     ])
     db.session.commit()
