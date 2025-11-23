@@ -30,3 +30,14 @@ def create_trip():
     db.session.add(new_trip)
     db.session.commit()
     return trip_schema.dump(new_trip), 201
+
+# PATCH an existing trip by ID
+@trips.route("/<int:trip_id>", methods=["PATCH"])
+def update_trip(trip_id):
+    trip = Trip.query.get(trip_id)
+    if not trip:
+        return jsonify({"error": f"Trip with ID #{trip_id} does not exist."}), 404
+    body_data = request.get_json()
+    trip = trip_schema.load(body_data, instance=trip, session=db.session, partial=True)
+    db.session.commit()
+    return trip_schema.dump(trip), 200

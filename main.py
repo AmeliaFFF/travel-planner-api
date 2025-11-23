@@ -1,34 +1,47 @@
 from dotenv import load_dotenv
 load_dotenv()
 
-from flask import Flask
+from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+from marshmallow import ValidationError
 
-# Initialise SQLAlchemy and Marshmallow objects:
 db = SQLAlchemy()
 ma = Marshmallow()
 
 def create_app():
-    
-    # Creating the flask app object - this is the core of our app!
     app = Flask(__name__)
-
-    # configuring our app:
     app.config.from_object("config.app_config")
 
-    # Initialise the database with the app:
     db.init_app(app)
-
-    # Initialise Marshmallow with the app:
     ma.init_app(app)
 
     from commands import db_commands
     app.register_blueprint(db_commands)
 
     from controllers import registerable_controllers
-
     for controller in registerable_controllers:
         app.register_blueprint(controller)
     
+    @app.errorhandler(400)
+    def handle_400(err):
+        return jsonify({
+            "error": "Bad request.", 
+            "details": str(err)
+            }), 400
+
+    @app.errorhandler(404)
+    def handle_404(err):
+        return jsonify({
+            "error": "Not found.",
+            "details": "The requested URL or resource does not exist."
+            }), 404
+
+    @app.errorhandler(ValidationError)
+    def handle_validation_error(err):
+        return jsonify({
+            "error": "Validation failed.",
+            "messages": err.messages
+            }), 400
+
     return app

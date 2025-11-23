@@ -30,3 +30,14 @@ def create_transport_booking():
     db.session.add(new_transport_booking)
     db.session.commit()
     return transport_booking_schema.dump(new_transport_booking), 201
+
+# PATCH an existing transport booking by ID
+@transport_bookings.route("/<int:transport_booking_id>", methods=["PATCH"])
+def update_transport_booking(transport_booking_id):
+    transport_booking = TransportBooking.query.get(transport_booking_id)
+    if not transport_booking:
+        return jsonify({"error": f"Transport booking with ID #{transport_booking_id} does not exist."}), 404
+    body_data = request.get_json()
+    transport_booking = transport_booking_schema.load(body_data, instance=transport_booking, session=db.session, partial=True)
+    db.session.commit()
+    return transport_booking_schema.dump(transport_booking), 200

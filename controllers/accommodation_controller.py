@@ -30,3 +30,14 @@ def create_accommodation_booking():
     db.session.add(new_accommodation_booking)
     db.session.commit()
     return accommodation_booking_schema.dump(new_accommodation_booking), 201
+
+# PATCH an existing accommodation booking by ID
+@accommodation_bookings.route("/<int:accommodation_booking_id>", methods=["PATCH"])
+def update_accommodation_booking(accommodation_booking_id):
+    accommodation_booking = AccommodationBooking.query.get(accommodation_booking_id)
+    if not accommodation_booking:
+        return jsonify({"error": f"Accommodation booking with ID #{accommodation_booking_id} does not exist."}), 404
+    body_data = request.get_json()
+    accommodation_booking = accommodation_booking_schema.load(body_data, instance=accommodation_booking, session=db.session, partial=True)
+    db.session.commit()
+    return accommodation_booking_schema.dump(accommodation_booking), 200

@@ -30,3 +30,14 @@ def create_expense():
     db.session.add(new_expense)
     db.session.commit()
     return expense_schema.dump(new_expense), 201
+
+# PATCH an existing expense by ID
+@expenses.route("/<int:expense_id>", methods=["PATCH"])
+def update_expense(expense_id):
+    expense = Expense.query.get(expense_id)
+    if not expense:
+        return jsonify({"error": f"Expense with ID #{expense_id} does not exist."}), 404
+    body_data = request.get_json()
+    expense = expense_schema.load(body_data, instance=expense, session=db.session, partial=True)
+    db.session.commit()
+    return expense_schema.dump(expense), 200

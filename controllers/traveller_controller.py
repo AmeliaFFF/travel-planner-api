@@ -30,3 +30,14 @@ def create_traveller():
     db.session.add(new_traveller)
     db.session.commit()
     return traveller_schema.dump(new_traveller), 201
+
+# PATCH an existing traveller by ID
+@travellers.route("/<int:traveller_id>", methods=["PATCH"])
+def update_traveller(traveller_id):
+    traveller = Traveller.query.get(traveller_id)
+    if not traveller:
+        return jsonify({"error": f"Traveller with ID #{traveller_id} does not exist."}), 404
+    body_data = request.get_json()
+    traveller = traveller_schema.load(body_data, instance=traveller, session=db.session, partial=True)
+    db.session.commit()
+    return traveller_schema.dump(traveller), 200

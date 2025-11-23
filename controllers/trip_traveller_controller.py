@@ -77,3 +77,22 @@ def create_trip_traveller():
     db.session.add(new_trip_traveller)
     db.session.commit()
     return trip_traveller_schema.dump(new_trip_traveller), 201
+
+# PATCH an existing trip traveller by ID
+@trip_travellers.route("/<int:trip_id>/<int:traveller_id>", methods=["PATCH"])
+def update_trip_traveller(trip_id, traveller_id):
+    trip_traveller = TripTraveller.query.get((trip_id, traveller_id))
+    if not trip_traveller:
+        return jsonify({"error": f"Trip traveller with Trip ID #{trip_id} and Traveller ID #{traveller_id} does not exist."}), 404
+    body_data = request.get_json()
+    if "role" not in body_data:
+        return jsonify({
+            "error": "Missing required field.",
+            "required_updatable_field": "role",
+            "example_format": {
+                "role": "friend"
+            }
+        }), 400
+    trip_traveller.role = body_data["role"]
+    db.session.commit()
+    return trip_traveller_schema.dump(trip_traveller), 200
