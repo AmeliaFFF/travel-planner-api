@@ -12,3 +12,12 @@ def get_expenses():
     expenses_list = db.session.scalars(stmt)
     result = expenses_schema.dump(expenses_list)
     return jsonify(result), 200
+
+# GET a single expense by ID
+@expenses.route("/<int:expense_id>", methods=["GET"])
+def get_expense(expense_id):
+    expense = Expense.query.get(expense_id)
+    if not expense:
+        return jsonify({"error": f"Expense with ID #{expense_id} does not exist."}), 404
+    result = expense_schema.dump(expense)
+    return jsonify(result), 200

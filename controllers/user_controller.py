@@ -12,3 +12,12 @@ def get_users():
     users_list = db.session.scalars(stmt)
     result = users_schema.dump(users_list)
     return jsonify(result), 200
+
+# GET a single user by ID
+@users.route("/<int:user_id>", methods=["GET"])
+def get_user(user_id):
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"error": f"User with ID #{user_id} does not exist."}), 404
+    result = user_schema.dump(user)
+    return jsonify(result), 200

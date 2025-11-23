@@ -12,3 +12,12 @@ def get_transport_bookings():
     transport_bookings_list = db.session.scalars(stmt)
     result = transport_bookings_schema.dump(transport_bookings_list)
     return jsonify(result), 200
+
+# GET a single transport booking by ID
+@transport_bookings.route("/<int:transport_booking_id>", methods=["GET"])
+def get_transport_booking(transport_booking_id):
+    transport_booking = TransportBooking.query.get(transport_booking_id)
+    if not transport_booking:
+        return jsonify({"error": f"Transport booking with ID #{transport_booking_id} does not exist."}), 404
+    result = transport_booking_schema.dump(transport_booking)
+    return jsonify(result), 200

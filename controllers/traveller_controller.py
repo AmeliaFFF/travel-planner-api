@@ -12,3 +12,12 @@ def get_travellers():
     travellers_list = db.session.scalars(stmt)
     result = travellers_schema.dump(travellers_list)
     return jsonify(result), 200
+
+# GET a single traveller by ID
+@travellers.route("/<int:traveller_id>", methods=["GET"])
+def get_traveller(traveller_id):
+    traveller = Traveller.query.get(traveller_id)
+    if not traveller:
+        return jsonify({"error": f"Traveller with ID #{traveller_id} does not exist."}), 404
+    result = traveller_schema.dump(traveller)
+    return jsonify(result), 200
