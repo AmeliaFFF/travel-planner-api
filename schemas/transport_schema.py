@@ -3,6 +3,7 @@ from main import ma
 from models.transport import TransportBooking
 
 class TransportBookingSchema(ma.SQLAlchemyAutoSchema):
+    """Marshmallow schema for TransportBooking model. Includes validation to ensure departure time is before arrival time."""
     class Meta:
         model = TransportBooking
         load_instance = True

@@ -14,11 +14,15 @@ db_commands = Blueprint("db", __name__)
 
 @db_commands.cli.command("create")
 def create_db():
+    """Creates all database tables from models."""
     db.create_all()
     print("Tables created.")
 
 @db_commands.cli.command("seed")
 def seed_db():
+    """Populates all tables in the database with sample data."""
+    # DISCLAIMER: Sample data values (names, addresses, booking references, etc.) were generated with help from an AI tool to create realistic looking data. All code and database logic is my own work.
+
     # USERS
     alice = User(
         name="Alice Smith",
@@ -172,13 +176,13 @@ def seed_db():
     db.session.add_all([japan_trip, nz_trip, italy_trip, thailand_trip, canada_trip, sg_trip])
     db.session.commit()
 
-    # TRIP–TRAVELLER (JOIN TABLE)
+    # TRIP–TRAVELLER (join table)
     db.session.add_all([
         # Japan trip: Alice + Emma
         TripTraveller(trip_id=japan_trip.trip_id, traveller_id=alice_traveller.traveller_id, role="organiser"),
         TripTraveller(trip_id=japan_trip.trip_id, traveller_id=emma_traveller.traveller_id, role="companion"),
 
-        # NZ trip: Alice only
+        # New Zealand trip: Alice only
         TripTraveller(trip_id=nz_trip.trip_id, traveller_id=alice_traveller.traveller_id, role="solo traveller"),
 
         # Italy trip: John + Lucy + Emma
@@ -224,7 +228,7 @@ def seed_db():
             cost_total=64000,
             currency_code="JPY"
         ),
-        # NZ trip accommodation
+        # New Zealand trip accommodation
         AccommodationBooking(
             trip_id=nz_trip.trip_id,
             name="Queenstown Lakeview Holiday Park",
@@ -306,7 +310,7 @@ def seed_db():
             cost_total=1450.00,
             currency_code="AUD"
         ),
-        # NZ trip transport
+        # New Zealand trip transport
         TransportBooking(
             trip_id=nz_trip.trip_id,
             transport_type="car_rental",
@@ -386,7 +390,7 @@ def seed_db():
             cost_total=3800,
             currency_code="JPY"
         ),
-        # NZ itinerary item
+        # New Zealand itinerary item
         ItineraryItem(
             trip_id=nz_trip.trip_id,
             date="2026-11-03",
@@ -454,7 +458,7 @@ def seed_db():
             cost_total=1200,
             currency_code="JPY"
         ),
-        # NZ expense
+        # New Zealand expense
         Expense(
             trip_id=nz_trip.trip_id,
             date="2026-11-04",
@@ -497,5 +501,6 @@ def seed_db():
 
 @db_commands.cli.command("drop")
 def drop_db():
+    """Drops all database tables."""
     db.drop_all()
     print("Tables dropped.")

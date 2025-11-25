@@ -1,6 +1,7 @@
 from main import db
 
 class ItineraryItem(db.Model):
+    """Represents a planned activity or event in a trip itinerary."""
     __tablename__ = "itinerary_item"
     itinerary_item_id = db.Column(db.Integer, primary_key=True)
     trip_id = db.Column(db.Integer, db.ForeignKey("trip.trip_id"), nullable=False)

@@ -1,6 +1,7 @@
 from main import db
 
 class AccommodationBooking(db.Model):
+    """Represents an accommodation booking for a trip."""
     __tablename__ = "accommodation_booking"
     accommodation_id = db.Column(db.Integer, primary_key=True)
     trip_id = db.Column(db.Integer, db.ForeignKey("trip.trip_id"), nullable=False)

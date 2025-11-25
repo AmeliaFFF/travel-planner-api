@@ -1,6 +1,7 @@
 from main import db
 
 class User(db.Model):
+    """Represents a registered user of the travel planner application."""
     __tablename__ = "user"
     user_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)

@@ -2,6 +2,7 @@ from main import ma
 from models.user import User
 
 class UserSchema(ma.SQLAlchemyAutoSchema):
+    """Marshmallow schema for User model."""
     class Meta:
         model = User
         load_instance = True

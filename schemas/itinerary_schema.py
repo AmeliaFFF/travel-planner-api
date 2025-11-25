@@ -3,6 +3,7 @@ from main import ma
 from models.itinerary import ItineraryItem
 
 class ItineraryItemSchema(ma.SQLAlchemyAutoSchema):
+    """Marshmallow schema for ItineraryItem model. Includes validation to ensure start time is before end time when both are provided."""
     class Meta:
         model = ItineraryItem
         load_instance = True

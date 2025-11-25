@@ -3,6 +3,7 @@ from models.trip_traveller import TripTraveller
 from schemas.traveller_schema import TravellerSchema
 
 class TripTravellerSchema(ma.SQLAlchemyAutoSchema):
+    """Marshmallow schema for TripTraveller model. Includes nested traveller information to show both the association and the traveller's details in trip responses."""
     traveller = ma.Nested(TravellerSchema, only=["name", "email", "notes"])
     class Meta:
         model = TripTraveller

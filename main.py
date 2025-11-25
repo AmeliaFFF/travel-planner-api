@@ -10,6 +10,7 @@ db = SQLAlchemy()
 ma = Marshmallow()
 
 def create_app():
+    """Creates and configures the Flask application instance. Initialises extensions, registers blueprints for all controllers, and sets up global error handlers."""
     app = Flask(__name__)
     app.config.from_object("config.app_config")
 

@@ -8,6 +8,7 @@ from schemas.trip_traveller_schema import TripTravellerSchema
 from schemas.user_schema import UserSchema
 
 class TripSchema(ma.SQLAlchemyAutoSchema):
+    """Marshmallow schema for Trip model. Includes nested relationships for accommodation bookings, transport bookings, itinerary items, and associated travellers."""
 
     accommodation_bookings = fields.Nested("AccommodationBookingSchema", only=["name", "address", "check_in_date", "check_out_date", "booking_reference", "cost_total", "currency_code"], many=True)
     

@@ -1,6 +1,7 @@
 from main import db
 
 class Expense(db.Model):
+    """Represents an expense incurred during a trip."""
     __tablename__ = "expense"
     expense_id = db.Column(db.Integer, primary_key=True)
     trip_id = db.Column(db.Integer, db.ForeignKey("trip.trip_id"), nullable=False)

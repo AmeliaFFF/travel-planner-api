@@ -2,6 +2,7 @@ from main import ma
 from models.expense import Expense
 
 class ExpenseSchema(ma.SQLAlchemyAutoSchema):
+    """Marshmallow schema for Expense model."""
     class Meta:
         model = Expense
         load_instance = True

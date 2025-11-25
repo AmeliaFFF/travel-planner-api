@@ -3,6 +3,7 @@ from main import ma
 from models.accommodation import AccommodationBooking
 
 class AccommodationBookingSchema(ma.SQLAlchemyAutoSchema):
+    """Marshmallow schema for AccommodationBooking model. Includes validation to ensure check-in date is before check-out date."""
     class Meta:
         model = AccommodationBooking
         load_instance = True
