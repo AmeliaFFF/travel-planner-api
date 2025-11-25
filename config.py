@@ -1,7 +1,7 @@
 import os
 
 class Config(object):
-"""Base configuration class."""
+    """Base configuration class."""
     @property
     def SQLALCHEMY_DATABASE_URI(self):
         """Returns the database connection URL for the environment. Raises ValueError if DATABASE_URL environment variable is not set."""

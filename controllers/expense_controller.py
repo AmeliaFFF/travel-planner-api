@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, abort
+from flask import Blueprint, jsonify, request
 from main import db
 from models.expense import Expense
 from models.trip import Trip

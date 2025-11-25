@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, abort
+from flask import Blueprint, jsonify, request
 from main import db
 from models.user import User
 from schemas.user_schema import user_schema, users_schema
