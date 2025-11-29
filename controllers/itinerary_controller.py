@@ -8,7 +8,7 @@ itinerary_items = Blueprint("itinerary_items", __name__, url_prefix="/itinerary-
 
 @itinerary_items.route("/", methods=["GET"])
 def get_itinerary_items():
-    """Retrieve all itinerary items, ordered by date and start time."""
+    """Retrieves all itinerary items, ordered by date and start time."""
     stmt = (db.select(ItineraryItem).order_by(ItineraryItem.date, ItineraryItem.start_time))
     itinerary_items_list = db.session.scalars(stmt)
     result = itinerary_items_schema.dump(itinerary_items_list)
@@ -16,7 +16,7 @@ def get_itinerary_items():
 
 @itinerary_items.route("/<int:itinerary_item_id>", methods=["GET"])
 def get_itinerary_item(itinerary_item_id):
-    """Retrieve a single itinerary item by its itinerary_item_id."""
+    """Retrieves a single itinerary item by its itinerary_item_id."""
     itinerary_item = ItineraryItem.query.get(itinerary_item_id)
     if not itinerary_item:
         return jsonify({"error": f"Itinerary item with ID #{itinerary_item_id} does not exist."}), 404
