@@ -1,0 +1,6 @@
+# Duplicate this file and rename it to `.flaskenv` to set up your Flask environment variables.
+# Update the environment or debug mode as required.
+# DELETE THESE COMMENTS (lines 1-3) and save the file.
+FLASK_APP=main:create_app
+FLASK_ENV=development
+FLASK_DEBUG=True
