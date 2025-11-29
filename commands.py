@@ -310,6 +310,18 @@ def seed_db():
             cost_total=1450.00,
             currency_code="AUD"
         ),
+            TransportBooking(
+            trip_id=japan_trip.trip_id,
+            transport_type="flight",
+            from_location="Tokyo (Haneda)",
+            to_location="Sydney",
+            departure_datetime="2026-04-23 22:00",
+            arrival_datetime="2026-04-24 08:45",
+            carrier_name="Qantas",
+            booking_reference="QF26-2026",
+            cost_total=1450.00,
+            currency_code="AUD"
+        ),
         # New Zealand trip transport
         TransportBooking(
             trip_id=nz_trip.trip_id,

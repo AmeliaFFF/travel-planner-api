@@ -122,7 +122,7 @@ Follow the steps below to set up the Travel Planner API on your local machine.
 
 6. Grant all permissions on the default schemas:
     ```SQL
-    GRANT ALL ON SCHEMA PUBLIC TO travel_planner_dev;
+    GRANT ALL ON SCHEMA public TO travel_planner_dev;
     ```
 
 #### Additional Commands
@@ -279,6 +279,31 @@ Follow the steps below to set up the Travel Planner API on your local machine.
 
 2. The API is now available at **http://127.0.0.1:5000**
 
+## Production Deployment
+
+This project includes a live production deployment using Neon (PostgreSQL database hosting) and Render (Python web service hosting).
+
+**Live API Base URL:** *Coming Soon*
+<!-- TODO: Add production URL -->
+
+All API endpoints listed below can be accessed using this base URL.
+
+## Entity Relationship Diagram
+
+Below is the ERD illustrating the structure and relationships between all database tables.
+
+![ERD](./ERD.png)
+
+The key relationships are summarised below:
+
+- A `user` can create zero or many `trip` records.
+- A `trip` can contain zero or many:
+    - `accommodation_booking` records (e.g., hotels, hostels, camp sites).
+    - `transport_booking` records (e.g., flights, trains, transfers).
+    - `itinerary_item` records (e.g., events, attractions, tours).
+    - `expense` records (e.g., food, souvenirs, entry fees).
+- A `trip` can have zero or many `traveller` records, and a `traveller` can join zero or many `trip` records. This many-to-many relationship is implemented through the `trip_traveller` join table.
+
 ## API Endpoints
 
 The following tables describe all available API endpoints. Each section is grouped by resource and includes supported HTTP methods, endpoint paths, and a brief description of the operation performed.
@@ -369,7 +394,6 @@ The following tables describe all available API endpoints. Each section is group
 | POST | /trip-travellers | Creates a new trip-traveller association. |
 | PATCH | /trip-travellers/<trip_id>/<traveller_id> | Updates "role" field of an existing trip-traveller association. |
 | DELETE | /trip-travellers/<trip_id>/<traveller_id> | Deletes an existing trip-traveller association. |
-
 
 ## Usage Examples
 
