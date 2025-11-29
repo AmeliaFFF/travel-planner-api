@@ -283,8 +283,7 @@ Follow the steps below to set up the Travel Planner API on your local machine.
 
 This project includes a live production deployment using Neon (PostgreSQL database hosting) and Render (Python web service hosting).
 
-**Live API Base URL:** *Coming Soon*
-<!-- TODO: Add production URL -->
+**Live API Base URL: https://travel-planner-api-d1up.onrender.com**
 
 All API endpoints listed below can be accessed using this base URL.
 
