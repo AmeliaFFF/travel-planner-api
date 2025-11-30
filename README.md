@@ -2,6 +2,49 @@
 
 *A backend application that centralises trip planning and travel-related data.*
 
+## Table of Contents
+- [Description](#description)
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Technical Prerequisites](#technical-prerequisites)
+- [Installation](#installation)
+    - [Install Python 3](#install-python-3)
+    - [Install PostgreSQL](#install-postgresql)
+    - [Create a Database](#create-a-database)
+- [Initialise the Project Locally](#initialise-the-project-locally)
+    - [Clone the Repository](#clone-the-repository)
+    - [Activate a Virtual Environment](#activate-a-virtual-environment)
+    - [Install Dependencies](#install-dependencies)
+- [Environment Configuration](#environment-configuration)
+    - [Local Database Environment](#local-database-environment)
+    - [Flask Environment](#flask-environment)
+- [Running the API Locally](#running-the-api-locally)
+    - [Prepare the Environment](#prepare-the-environment)
+    - [Manage the Database](#manage-the-database)
+    - [Start the Server](#start-the-server)
+- [Production Deployment](#production-deployment)
+- [Entity Relationship Diagram](#entity-relationship-diagram)
+- [API Endpoints](#api-endpoints)
+    - [Users](#users)
+    - [Trips](#trips)
+    - [Accommodation Bookings](#accommodation-bookings)
+    - [Transport Bookings](#transport-bookings)
+    - [Itinerary Items](#itinerary-items)
+    - [Expenses](#expenses)
+    - [Travellers](#travellers)
+    - [Trip Travellers](#trip-travellers)
+- [Usage Examples](#usage-examples)
+    - [Users](#users-1)
+    - [Trips](#trips-1)
+    - [Accommodation Bookings](#accommodation-bookings-1)
+    - [Transport Bookings](#transport-bookings-1)
+    - [Itinerary Items](#itinerary-items-1)
+    - [Expenses](#expenses-1)
+    - [Travellers](#travellers-1)
+    - [Trip Travellers](#trip-travellers-1)
+- [Acknowledgements](#acknowledgements)
+- [Contact](#contact)
+
 ## Description
 
 The Travel Planner API is a RESTful backend service designed to help users organise and manage their holidays in one central place. It allows users to create trips, manage accommodation and transport bookings, add itinerary items, track expenses, and record the travellers associated with each trip.
@@ -16,7 +59,7 @@ This project was developed to solve a common problem: travel information is ofte
 - Clear RESTful structure with predictable endpoint behaviour.
 - Full CRUD operations across all resources.
 - Database seeding for quick development and testing.
-- Input validation and serialisation using Marshmallow schemas.
+- Input validation and serialisation using schemas.
 
 ## Technologies Used
 
@@ -26,7 +69,8 @@ This project was developed to solve a common problem: travel information is ofte
 - Marshmallow (serialisation and validation)
 - PostgreSQL (relational database)
 - psycopg2 (PostgreSQL adapter)
-- dotenv (environment variable loading)
+- python-dotenv (environment variable loading)
+- Gunicorn (production WSGI server)
 - Virtual environment for dependency isolation
 
 ## Technical Prerequisites
@@ -144,28 +188,28 @@ Follow the steps below to set up the Travel Planner API on your local machine.
 
 4. To reconnect to the database:
 
-    - **macOS / Windows:**
-        ```bash
-        psql -d travel_planner_db -U travel_planner_dev
-        ```
-    - **Linux:**
-        ```bash
-        sudo -u postgres psql -d travel_planner_db
-        ```
+- **macOS / Windows:**
+    ```bash
+    psql -d travel_planner_db -U travel_planner_dev
+    ```
+- **Linux:**
+    ```bash
+    sudo -u postgres psql -d travel_planner_db
+    ```
 
 ## Initialise the Project Locally
 
 ### Clone the Repository
 
 1. Clone the repository to your local machine:
-    - **HTTPS:**
-        ```bash
-        git clone https://github.com/AmeliaFFF/travel-planner-api.git
-        ```
-    - **SSH:**
-        ```bash
-        git clone git@github.com:AmeliaFFF/travel-planner-api.git
-        ```
+- **HTTPS:**
+    ```bash
+    git clone https://github.com/AmeliaFFF/travel-planner-api.git
+    ```
+- **SSH:**
+    ```bash
+    git clone git@github.com:AmeliaFFF/travel-planner-api.git
+    ```
 
 2. Navigate into the project directory:
     ```bash
@@ -180,18 +224,18 @@ Follow the steps below to set up the Travel Planner API on your local machine.
     ```
 
 2. Activate the virtual environment:
-    - **macOS / Linux:**
-        ```bash
-        source .venv/bin/activate
-        ```
-    - **Windows:**
-        ```bash
-        .venv\Scripts\activate
-        ```
-        *If PowerShell blocks activation, run this once first:*  
-        ```bash
-        Set-ExecutionPolicy -Scope Process RemoteSigned
-        ```
+- **macOS / Linux:**
+    ```bash
+    source .venv/bin/activate
+    ```
+- **Windows:**
+    ```bash
+    .venv\Scripts\activate
+    ```
+    *If PowerShell blocks activation, run this once first:*  
+    ```bash
+    Set-ExecutionPolicy -Scope Process RemoteSigned
+    ```
 
 3. Confirm the environment is active before continuing.
 
@@ -285,7 +329,7 @@ This project includes a live production deployment using Neon (PostgreSQL databa
 
 **Live API Base URL: https://travel-planner-api-d1up.onrender.com**
 
-All API endpoints listed below can be accessed using this base URL.
+All [API endpoints](#api-endpoints) listed below can be accessed using this base URL.
 
 ## Entity Relationship Diagram
 
@@ -555,7 +599,7 @@ Below are example JSON responses for each entity. These illustrate the structure
 }
 ```
 
-### Expense
+### Expenses
 
 ```json
 {
